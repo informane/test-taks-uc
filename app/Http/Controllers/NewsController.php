@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Tags;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -15,45 +16,52 @@ class NewsController extends Controller
 
     protected $users;
     protected $news;
+    protected $tags;
     /**
      * NewsController constructor.
      *
      * @param User $users
      * @param News $news
      */
-    public function __construct(User $users, News $news)
+    public function __construct(User $users, News $news, Tags $tags)
     {
         $this->users = $users;
         $this->news = $news;
+        $this->tags = $tags;
     }
 
     /**
      * fetch all articles with news tag from https://laravel-news.com/blog.
      *
-     * @param $months_number
+     * @param string $tag
+     * @param int $months_number
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function refresh($months_number =4)
+    public function refresh($tag = 'News',$months_number =4)
     {
 
         if($months_number <= 0){
             return redirect('/news');
         }
 
-        News::fetchNews($months_number);
+        News::fetchNews($tag,$months_number);
 
-        return redirect('/news');
+        return redirect('/news/'.$tag);
     }
 
     /**
      * Display a listing of News.
      *
+     * @param string $tag
+     * @param string $orderBy
+     * @param string $dir
      * @return \Illuminate\Http\Response
      */
-    public function index($orderBy = 'author', $dir = 'asc')
+    public function index($tag = 'News', $orderBy = 'author', $dir = 'asc')
     {
-        $this->news = News::orderBy($orderBy, $dir)->paginate('7');
-        return response()->view('index',['news' => $this->news]);
+        $tags = $this->tags = Tags::all();
+        $this->news = News::orderBy($orderBy, $dir)->where(['tag'=>urldecode($tag)])->paginate('7');
+        return response()->view('index',['news' => $this->news, 'tag' => $tag, 'tags' =>$tags]);
     }
 
 
@@ -66,7 +74,9 @@ class NewsController extends Controller
     {
         $this->authorize('update', News::class);
 
-        return response()->view('edit', ['new' => $news]);
+        $tags = $this->tags = Tags::all();
+
+        return response()->view('edit', ['new' => $news, 'tags' => $tags]);
     }
 
     /**

@@ -6,6 +6,17 @@
         <form method="POST" action="/news-update/{{$new->id}}" enctype="multipart/form-data">
             @csrf
             <div class="items-center">
+                <x-label for="tag" value="Tag" />
+                <x-dd id="tag" name="tag" class="block mt-1 w-full @error('tag') is-invalid @enderror">
+                    @foreach($tags as $tag)
+                        <option value="{{$tag->tag}}" @selected($new->tag == $tag)>{{$tag->tag}}</option>
+                    @endforeach
+                </x-dd>
+                @error('tag')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="items-center">
                 <x-label for="img" value="Image" />
                 <x-input value="{{$new->img}}" type="text" id="img" name="img" class="block mt-1 w-full @error('img') is-invalid @enderror"/>
                 <img src="{{$new->img}}" alt="{{$new->title}}" class="news_img"/>

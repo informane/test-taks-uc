@@ -8,12 +8,12 @@ use voku\helper\HtmlDomParser;
 
 class News extends Model
 {
-    protected $fillable = ['img','title','author','excerpt','pub_date','link'];
+    protected $fillable = ['img','title','author','excerpt','pub_date','link', 'tag'];
     use HasFactory;
 
 
     //fetch all articles with news tag from https://laravel-news.com/blog.
-    public static function fetchNews($months_number)
+    public static function fetchNews($tag,$months_number)
     {
         $is_newer = true;
         $page = 1;
@@ -55,8 +55,8 @@ class News extends Model
                         $articleTag = trim($articleA->findOne('div > div > span')->text());
 
 
-                        //if main tag is not News go further
-                        if ($articleTag != 'News') {
+                        //if main tag is not $tag go further
+                        if ($articleTag != urldecode($tag)) {
                             $articleNum++;
                             continue;
                         }
@@ -94,6 +94,7 @@ class News extends Model
                         if($new == null) {
                             $new = new News();
                         }
+                        $new->tag = urldecode($tag);
                         $new->pub_date = $articleDate;
                         $new->link = $articleAhref;
                         $new->img = $articleImg;

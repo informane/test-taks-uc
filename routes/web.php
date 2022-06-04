@@ -20,8 +20,8 @@ Route::get('/', function () {
 
 Route::controller(\App\Http\Controllers\NewsController::class)->group(
     function (){
-        Route::get('/news/{orderBy?}/{dir?}','index');
-        Route::get('/news-refresh/{months_number?}','refresh');
+        Route::get('/news/{tag?}/{orderBy?}/{dir?}','index');
+        Route::get('/news-refresh/{tag?}/{months_number?}','refresh');
         Route::get('/news-edit/{news}','edit')->middleware('auth');
         Route::post('/news-update/{id}','update')->middleware('auth');
     });

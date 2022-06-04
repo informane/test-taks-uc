@@ -29,6 +29,6 @@ class NewsPolicy
      */
     public function update(User $user)
     {
-        return $user->name == 'admin';
+        return $user->name == 'editor';
     }
 }
