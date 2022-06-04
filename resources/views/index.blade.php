@@ -4,16 +4,16 @@
     </div>
     <div class="p-3 index">
         Tag name:
-        @foreach($tags as $tag)
-        <a href="/news/{{urlencode($tag->tag)}}">{{$tag->tag}}</a>
+        @foreach($tags as $tag1)
+        <a href="/news/{{urlencode($tag1->tag)}}">{{$tag1->tag}}</a>
         @endforeach
     </div>
     <div class="p-3 index">
         Sort By:
-        <a href="/news/{{$tag}}/author">Author name</a>
-        <a href="/news/{{$tag}}/title">Title</a>
-        <a href="/news/{{$tag}}/pub_date/desc">Publish date (newer first)</a>
-        <a href="/news/{{$tag}}/pub_date/asc">Publish date</a>
+        <a href="/news/{{urlencode($tag)}}/author">Author name</a>
+        <a href="/news/{{urlencode($tag)}}/title">Title</a>
+        <a href="/news/{{urlencode($tag)}}/pub_date/desc">Publish date (newer first)</a>
+        <a href="/news/{{urlencode($tag)}}/pub_date/asc">Publish date</a>
     </div>
     @foreach ($news as $new)
             <div class="p-3 index">
